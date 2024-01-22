@@ -1,15 +1,11 @@
-using UnityEngine;
 using UnityEngine.Events;
 
-public class ImmediateActivator : MonoBehaviour
+public class ImmediateActivator : Activator
 {
     public event UnityAction<Player> PlayerEntered;
 
-    private void OnTriggerEnter(Collider other)
+    protected override void Activate(Player player)
     {
-        if (other.TryGetComponent(out Player player))
-        {
-            PlayerEntered?.Invoke(player);
-        }
+        PlayerEntered?.Invoke(player);
     }
 }
