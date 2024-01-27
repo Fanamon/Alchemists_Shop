@@ -1,16 +1,16 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Movement))]
+[RequireComponent(typeof(PhysicsMovement))]
 public class KeyboardInput : MonoBehaviour
 {
     private const string Horizontal = "Horizontal";
     private const string Vertical = "Vertical";
 
-    private Movement _movement;
+    private PhysicsMovement _movement;
 
     private void Awake()
     {
-        _movement = GetComponent<Movement>();
+        _movement = GetComponent<PhysicsMovement>();
     }
 
     private void Update()

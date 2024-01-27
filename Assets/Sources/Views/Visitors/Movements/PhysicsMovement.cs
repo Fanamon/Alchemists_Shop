@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Movement : MonoBehaviour
+public class PhysicsMovement : MonoBehaviour
 {
     private const float MinMoveSensitivity = 0.01f;
 
