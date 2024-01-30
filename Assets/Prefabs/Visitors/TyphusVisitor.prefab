@@ -167,7 +167,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 806f3a17c3b79e94492ddd634bd84db3, type: 2}
+  - {fileID: 2100000, guid: cc6b2c6741b2be44abab837a691c4098, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -199,11 +199,13 @@ GameObject:
   m_Component:
   - component: {fileID: 887450876985967908}
   - component: {fileID: 8401938674406213991}
+  - component: {fileID: -4986007169041128726}
   - component: {fileID: 648737124519535820}
   - component: {fileID: 3890730289112439597}
+  - component: {fileID: 9115142852962908974}
   - component: {fileID: 2898536946142773558}
   m_Layer: 6
-  m_Name: Visitor
+  m_Name: TyphusVisitor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -248,6 +250,33 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!54 &-4986007169041128726
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6785111805818502492}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 2
 --- !u!114 &648737124519535820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,6 +305,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 2.5
   _rotationSpeed: 0.1
+--- !u!114 &9115142852962908974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6785111805818502492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d49c24ce06972c46ba039b357443712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _type: 2
+  _potionToCure: {fileID: 2204806068114357636, guid: d0556a824543da049a87a3bffe303f1c,
+    type: 3}
 --- !u!95 &2898536946142773558
 Animator:
   serializedVersion: 5

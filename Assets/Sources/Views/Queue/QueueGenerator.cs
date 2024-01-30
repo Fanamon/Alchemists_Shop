@@ -10,6 +10,7 @@ public class QueueGenerator : MonoBehaviour
     [SerializeField] private VisitorsPool _visitorsPool;
 
     private Coroutine _generator;
+    private DiseaseRandomizer _diseaseRandomizer = new DiseaseRandomizer();
 
     public event UnityAction<Visitor> VisitorGenerated;
 
@@ -41,11 +42,9 @@ public class QueueGenerator : MonoBehaviour
 
     private Visitor GetCreatedVisitor()
     {
-        Visitor generatedVisitor = _visitorsPool.TryGetDisabledVisitor();
+        Visitor generatedVisitor = _visitorsPool.TryGetDisabledVisitor(_diseaseRandomizer.GetRandomDiseaseType());
 
-        generatedVisitor.transform.position = _placeForGeneration.transform.position;
-        generatedVisitor.transform.rotation = _placeForGeneration.transform.rotation;
-        generatedVisitor.gameObject.SetActive(true);
+        generatedVisitor.Reset(_placeForGeneration);
 
         return generatedVisitor;
     }

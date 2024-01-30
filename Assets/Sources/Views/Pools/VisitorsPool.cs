@@ -4,33 +4,41 @@ using UnityEngine;
 
 public class VisitorsPool : MonoBehaviour
 {
-    [SerializeField] private int _count;
+    [SerializeField] private int _eachVisitorTypeCount;
 
-    [SerializeField] private Visitor _visitorPrefab;
+    [SerializeField] private List<Visitor> _visitorPrefabs;
     [SerializeField] private Transform _container;
+    [SerializeField] private Transform _exitPosition;
 
-    private List<Visitor> _visitors = new List<Visitor>();
+    private Dictionary<DiseaseType, List<Visitor>> _visitors = new Dictionary<DiseaseType, List<Visitor>>();
 
     private void Awake()
     {
         SpawnPool();
     }
 
-    public Visitor TryGetDisabledVisitor()
+    public Visitor TryGetDisabledVisitor(DiseaseType disease)
     {
-        return _visitors.FirstOrDefault(visitor => visitor.gameObject.activeSelf == false);
+        return _visitors[disease].FirstOrDefault(visitor => visitor.gameObject.activeSelf == false);
     }
 
     private void SpawnPool()
     {
         Visitor spawnedVisitor;
 
-        for (int i = 0; i < _count; ++i)
+        for (int i = 0; i < _visitorPrefabs.Count; i++)
         {
-            spawnedVisitor = Instantiate(_visitorPrefab, _container);
-            spawnedVisitor.gameObject.SetActive(false);
+            DiseaseType diseaseType = _visitorPrefabs[i].GetComponent<Disease>().Type;
+            _visitors[diseaseType] = new List<Visitor>();
 
-            _visitors.Add(spawnedVisitor);
+            for (int j = 0; j < _eachVisitorTypeCount; j++)
+            {
+                spawnedVisitor = Instantiate(_visitorPrefabs[i], _container);
+                spawnedVisitor.InitializeExit(_exitPosition.position);
+                spawnedVisitor.gameObject.SetActive(false);
+
+                _visitors[diseaseType].Add(spawnedVisitor);
+            }
         }
     }
 }

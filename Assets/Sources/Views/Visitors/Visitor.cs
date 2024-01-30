@@ -14,11 +14,13 @@ public class Visitor : MonoBehaviour
     private const string LeavingRight = "LeavingRight";
 
     [SerializeField] private Animator _animator;
-    [SerializeField] private Vector3 _exitPosition;
+    [SerializeField] private Transform _model;
+    [SerializeField] private KeeperPlace _keeper;
 
     private Transform _transform;
     private MathMovement _movement;
     private QueuePlace _place;
+    private Vector3 _exitPosition;
 
     private string[] _leavingAnimations = { LeaveLeft, LeaveRight };
     private System.Random _random = new System.Random();
@@ -31,9 +33,30 @@ public class Visitor : MonoBehaviour
         _movement = GetComponent<MathMovement>();
     }
 
+    public void InitializeExit(Vector3 exitPosition)
+    {
+        _exitPosition = exitPosition;
+    }
+
+    public void Reset(Transform startPlace)
+    {
+        _transform.position = startPlace.position;
+        _transform.rotation = startPlace.rotation;
+        _keeper.DropObject();
+
+        gameObject.SetActive(true);
+    }
+
     public void TakeNextPlace(QueuePlace place)
     {
         StartCoroutine(MoveToNextPlace(place));
+    }
+
+    public void TakePotion(Transform potion)
+    {
+        _keeper.Take(potion);
+
+        LeaveQueue(_exitPosition);
     }
 
     public void LeaveQueue(Vector3 exitPosition)
@@ -60,7 +83,6 @@ public class Visitor : MonoBehaviour
         }
 
         _place = place;
-        LeaveQueue(_exitPosition);
     }
 
     private bool CheckPositionsCompatibility(Vector3 firstPosition, Vector3 secondPosition)

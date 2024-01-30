@@ -11,7 +11,7 @@ public class ActivatorWithDelay : Activator
 
     private Coroutine _activatorWithDelay = null;
 
-    public event UnityAction Activated;
+    public event UnityAction<Player> Activated;
     public event UnityAction<int> Counted;
 
     private void OnTriggerExit(Collider other)
@@ -28,10 +28,10 @@ public class ActivatorWithDelay : Activator
     {
         TryFinishActivating();
 
-        _activatorWithDelay = StartCoroutine(ActivateWithDelay());
+        _activatorWithDelay = StartCoroutine(ActivateWithDelay(player));
     }
 
-    private IEnumerator ActivateWithDelay()
+    private IEnumerator ActivateWithDelay(Player player)
     {
         int counter = 0;
         WaitForSecondsRealtime waitingTime = new WaitForSecondsRealtime(WaitingSeconds);
@@ -45,7 +45,7 @@ public class ActivatorWithDelay : Activator
         }
         while (counter < _delay);
 
-        Activated?.Invoke();
+        Activated?.Invoke(player);
         _activatorWithDelay = null;
     }
 

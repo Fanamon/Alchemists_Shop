@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7030079816187578590}
   - component: {fileID: 2204806068114357636}
   m_Layer: 0
-  m_Name: Potion
+  m_Name: DepressionPotion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6a2993bce3ad99418202c25c44a657d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _diseaseType: 4
 --- !u!1 &3397086222263379241
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +107,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3d450d3387350ea438f76b96e88efb59, type: 2}
+  - {fileID: 2100000, guid: 3e22383d48aa71f448532ca5b6a85b86, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

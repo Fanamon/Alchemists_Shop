@@ -54,6 +54,16 @@ public class KeeperPlace : MonoBehaviour, IKeepable
         return _objectToKeep.gameObject;
     }
 
+    public void DropObject()
+    {
+        if (_objectToKeep != null)
+        {
+            Destroy(_objectToKeep.gameObject);
+            _objectToKeep = null;
+            _isEmpty = true;
+        }
+    }
+
     private void ValidateObjectToKeep()
     {
         if (_objectToKeep == null)
