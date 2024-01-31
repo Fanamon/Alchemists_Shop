@@ -8,7 +8,6 @@ public class VisitorsPool : MonoBehaviour
 
     [SerializeField] private List<Visitor> _visitorPrefabs;
     [SerializeField] private Transform _container;
-    [SerializeField] private Transform _exitPosition;
 
     private Dictionary<DiseaseType, List<Visitor>> _visitors = new Dictionary<DiseaseType, List<Visitor>>();
 
@@ -34,7 +33,6 @@ public class VisitorsPool : MonoBehaviour
             for (int j = 0; j < _eachVisitorTypeCount; j++)
             {
                 spawnedVisitor = Instantiate(_visitorPrefabs[i], _container);
-                spawnedVisitor.InitializeExit(_exitPosition.position);
                 spawnedVisitor.gameObject.SetActive(false);
 
                 _visitors[diseaseType].Add(spawnedVisitor);

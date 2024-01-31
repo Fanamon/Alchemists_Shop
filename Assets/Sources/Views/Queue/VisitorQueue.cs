@@ -5,6 +5,7 @@ using UnityEngine;
 public class VisitorQueue : MonoBehaviour
 {
     [SerializeField] private Transform _queuePlacesKeeper;
+    [SerializeField] private Transform _exitPoint;
     [SerializeField] private QueueGenerator _generator;
 
     private List<Visitor> _visitors = new List<Visitor>();
@@ -19,11 +20,6 @@ public class VisitorQueue : MonoBehaviour
     {
         _generator.VisitorGenerated += OnVisitorGenerated;
 
-        foreach (var visitor in _visitors)
-        {
-            visitor.Leaved += OnVisitorLeaved;
-        }
-
         foreach (var place in _queuePlaces)
         {
             place.Emptied += OnPlaceEmptied;
@@ -36,7 +32,7 @@ public class VisitorQueue : MonoBehaviour
 
         foreach (var visitor in _visitors)
         {
-            visitor.Leaved -= OnVisitorLeaved;
+            visitor.Served -= OnVisitorServed;
         }
 
         foreach (var place in _queuePlaces)
@@ -52,27 +48,29 @@ public class VisitorQueue : MonoBehaviour
 
     private void OnVisitorGenerated(Visitor visitor)
     {
-        int firstEmptyPlace = System.Array.IndexOf(_queuePlaces, _queuePlaces.
-            First(place => place.IsEmpty));
+        int leastEmptyPlaceIndex = GetLeastEmptyPlaceIndex();
 
-        _visitors.Append(visitor);
+        _visitors.Add(visitor);
+        visitor.Served += OnVisitorServed;
 
-        if (firstEmptyPlace == _queuePlaces.Count() - 1)
+        if (leastEmptyPlaceIndex == _queuePlaces.Count() - 1)
         {
             _generator.StopGenerating();
         }
 
-        visitor.TakeNextPlace(_queuePlaces[firstEmptyPlace]);
+        visitor.TakeNextPlace(_queuePlaces[leastEmptyPlaceIndex]);
     }
 
-    private void OnVisitorLeaved(Visitor visitor)
+    private void OnVisitorServed(Visitor visitor)
     {
         _visitors.Remove(visitor);
+        visitor.Served -= OnVisitorServed;
+        visitor.LeaveQueue(_exitPoint.position);
     }
 
     private void OnPlaceEmptied(QueuePlace emptiedPlace)
     {
-        if (_generator.IsGenerating)
+        if (_visitors.Count == 0)
         {
             return;
         }
@@ -83,9 +81,25 @@ public class VisitorQueue : MonoBehaviour
         {
             _generator.StartGenerating();
         }
-        else if (_queuePlaces[placeIndex + 1].IsEmpty == false)
+        else if (placeIndex < _visitors.Count)
         {
             _visitors[placeIndex].TakeNextPlace(_queuePlaces[placeIndex]);
         }
+    }
+
+    private int GetLeastEmptyPlaceIndex()
+    {
+        int leastEmptyPlaceIndex = System.Array.IndexOf(_queuePlaces, _queuePlaces.
+            First(place => place.IsEmpty));
+
+        if (leastEmptyPlaceIndex != 0)
+        {
+            int lastUnemptyPlaceIndex = System.Array.IndexOf(_queuePlaces, _queuePlaces.Reverse().
+            First(place => place.IsEmpty == false));
+
+            leastEmptyPlaceIndex = lastUnemptyPlaceIndex + 1;
+        }
+
+        return leastEmptyPlaceIndex;
     }
 }

@@ -20,22 +20,18 @@ public class Visitor : MonoBehaviour
     private Transform _transform;
     private MathMovement _movement;
     private QueuePlace _place;
-    private Vector3 _exitPosition;
+    private QueuePlace _targetPlace;
+    private Coroutine _mover = null;
 
     private string[] _leavingAnimations = { LeaveLeft, LeaveRight };
     private System.Random _random = new System.Random();
 
-    public event UnityAction<Visitor> Leaved;
+    public event UnityAction<Visitor> Served;
 
     private void Awake()
     {
         _transform = transform;
         _movement = GetComponent<MathMovement>();
-    }
-
-    public void InitializeExit(Vector3 exitPosition)
-    {
-        _exitPosition = exitPosition;
     }
 
     public void Reset(Transform startPlace)
@@ -49,14 +45,20 @@ public class Visitor : MonoBehaviour
 
     public void TakeNextPlace(QueuePlace place)
     {
-        StartCoroutine(MoveToNextPlace(place));
+        if (_mover != null)
+        {
+            _place = _targetPlace;
+            StopCoroutine(_mover);
+        }
+
+        _mover = StartCoroutine(MoveToNextPlace(place));
     }
 
     public void TakePotion(Transform potion)
     {
         _keeper.Take(potion);
 
-        LeaveQueue(_exitPosition);
+        Served?.Invoke(this);
     }
 
     public void LeaveQueue(Vector3 exitPosition)
@@ -67,6 +69,13 @@ public class Visitor : MonoBehaviour
     private IEnumerator MoveToNextPlace(QueuePlace place)
     {
         Vector3 placePosition = place.transform.position;
+        place.Take();
+        _targetPlace = place;
+
+        if (_place != null)
+        {
+            _place.Leave();
+        }
 
         while (CheckPositionsCompatibility(_transform.position, placePosition) == false)
         {
@@ -75,14 +84,9 @@ public class Visitor : MonoBehaviour
             yield return null;
         }
 
-        place.Take();
-
-        if (_place != null)
-        {
-            _place.Leave();
-        }
-
         _place = place;
+        _targetPlace = null;
+        _mover = null;
     }
 
     private bool CheckPositionsCompatibility(Vector3 firstPosition, Vector3 secondPosition)
@@ -97,7 +101,6 @@ public class Visitor : MonoBehaviour
         bool isLeavingAnimationStarted = false;
 
         _animator.SetTrigger(triggerName);
-        Leaved?.Invoke(this);
         _place.Leave();
 
         while (CheckPositionsCompatibility(_transform.position, exitPosition) == false)

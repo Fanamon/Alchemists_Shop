@@ -1385,7 +1385,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1339829385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1067354554
 GameObject:
@@ -1888,6 +1888,7 @@ Transform:
   m_Children:
   - {fileID: 287381960}
   - {fileID: 470983890}
+  - {fileID: 963284563}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1339829386
@@ -1902,7 +1903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96848c0c9e7a394ea143f5d0671e063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _generatingDelaySeconds: 13
+  _generatingDelaySeconds: 3
   _placeForGeneration: {fileID: 470983890}
   _visitorsPool: {fileID: 1606103763}
 --- !u!114 &1339829387
@@ -1918,6 +1919,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _queuePlacesKeeper: {fileID: 287381960}
+  _exitPoint: {fileID: 963284563}
   _generator: {fileID: 1339829386}
 --- !u!1 &1422694412
 GameObject:
@@ -2118,7 +2120,6 @@ MonoBehaviour:
   _visitorPrefabs:
   - {fileID: 648737124519535820, guid: 893597008f0302e40abb2c707fbd418a, type: 3}
   _container: {fileID: 1606103764}
-  _exitPosition: {fileID: 963284563}
 --- !u!4 &1606103764
 Transform:
   m_ObjectHideFlags: 0
@@ -2777,4 +2778,3 @@ SceneRoots:
   - {fileID: 211887083}
   - {fileID: 1339829385}
   - {fileID: 1606103764}
-  - {fileID: 963284563}
