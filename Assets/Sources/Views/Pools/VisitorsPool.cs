@@ -6,8 +6,8 @@ public class VisitorsPool : MonoBehaviour
 {
     [SerializeField] private int _eachVisitorTypeCount;
 
-    [SerializeField] private List<Visitor> _visitorPrefabs;
     [SerializeField] private Transform _container;
+    [SerializeField] private List<Visitor> _visitorPrefabs;
 
     private Dictionary<DiseaseType, List<Visitor>> _visitors = new Dictionary<DiseaseType, List<Visitor>>();
 

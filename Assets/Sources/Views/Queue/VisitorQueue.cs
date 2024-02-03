@@ -8,36 +8,30 @@ public class VisitorQueue : MonoBehaviour
     [SerializeField] private Transform _exitPoint;
     [SerializeField] private QueueGenerator _generator;
 
-    private List<Visitor> _visitors = new List<Visitor>();
-    private QueuePlace[] _queuePlaces;
+    private Dictionary<Transform, Visitor> _queue = new Dictionary<Transform, Visitor>();
 
     private void Awake()
     {
-        _queuePlaces = _queuePlacesKeeper.GetComponentsInChildren<QueuePlace>();
+        QueuePlace[] queuePlaces = _queuePlacesKeeper.GetComponentsInChildren<QueuePlace>();
+
+        foreach (QueuePlace place in queuePlaces)
+        {
+            _queue.Add(place.transform, null);
+        }
     }
 
     private void OnEnable()
     {
         _generator.VisitorGenerated += OnVisitorGenerated;
-
-        foreach (var place in _queuePlaces)
-        {
-            place.Emptied += OnPlaceEmptied;
-        }
     }
 
     private void OnDisable()
     {
         _generator.VisitorGenerated -= OnVisitorGenerated;
 
-        foreach (var visitor in _visitors)
+        foreach (var visitor in _queue.Values.Where(visitor => visitor != null))
         {
-            visitor.Served -= OnVisitorServed;
-        }
-
-        foreach (var place in _queuePlaces)
-        {
-            place.Emptied -= OnPlaceEmptied;
+            visitor.Left -= OnVisitorLeft;
         }
     }
 
@@ -48,58 +42,62 @@ public class VisitorQueue : MonoBehaviour
 
     private void OnVisitorGenerated(Visitor visitor)
     {
-        int leastEmptyPlaceIndex = GetLeastEmptyPlaceIndex();
+        Transform emptyPlace = _queue.First(place => place.Value == null).Key;
+        int firstEmptyPlaceIndex = _queue.Keys.ToList().IndexOf(emptyPlace);
 
-        _visitors.Add(visitor);
-        visitor.Served += OnVisitorServed;
+        _queue[emptyPlace] = visitor;
+        visitor.Left += OnVisitorLeft;
+        visitor.TakeNextPlace(emptyPlace.position);
 
-        if (leastEmptyPlaceIndex == _queuePlaces.Count() - 1)
+        if (firstEmptyPlaceIndex == _queue.Count() - 1)
         {
             _generator.StopGenerating();
         }
-
-        visitor.TakeNextPlace(_queuePlaces[leastEmptyPlaceIndex]);
     }
 
-    private void OnVisitorServed(Visitor visitor)
+    private void OnVisitorLeft(Visitor leftVisitor)
     {
-        _visitors.Remove(visitor);
-        visitor.Served -= OnVisitorServed;
-        visitor.LeaveQueue(_exitPoint.position);
+        Transform leftPlace = _queue.First(place => place.Value == leftVisitor).Key;
+
+        _queue[leftPlace] = null;
+        leftVisitor.Left -= OnVisitorLeft;
+        leftVisitor.LeaveQueue(_exitPoint.position);
+
+        CarryOutQueueRotation(leftPlace);
     }
 
-    private void OnPlaceEmptied(QueuePlace emptiedPlace)
+    private void CarryOutQueueRotation(Transform leftplace)
     {
-        if (_visitors.Count == 0)
-        {
-            return;
-        }
+        int leftPlaceIndex = _queue.Keys.ToList().IndexOf(leftplace);
 
-        int placeIndex = System.Array.IndexOf(_queuePlaces, emptiedPlace);
-
-        if (placeIndex == _queuePlaces.Length - 1)
+        if (_generator.IsGenerating == false)
         {
             _generator.StartGenerating();
         }
-        else if (placeIndex < _visitors.Count)
+
+        if (leftPlaceIndex != _queue.Count() - 1)
         {
-            _visitors[placeIndex].TakeNextPlace(_queuePlaces[placeIndex]);
+            TakeVisitorsNextPlacesFrom(leftPlaceIndex);
         }
     }
 
-    private int GetLeastEmptyPlaceIndex()
+    private void TakeVisitorsNextPlacesFrom(int leftPlaceIndex)
     {
-        int leastEmptyPlaceIndex = System.Array.IndexOf(_queuePlaces, _queuePlaces.
-            First(place => place.IsEmpty));
+        List<Transform> placesToCarry = _queue.Keys.Skip(leftPlaceIndex).ToList();
 
-        if (leastEmptyPlaceIndex != 0)
+        for (int i = 0; i < placesToCarry.Count - 1; i++)
         {
-            int lastUnemptyPlaceIndex = System.Array.IndexOf(_queuePlaces, _queuePlaces.Reverse().
-            First(place => place.IsEmpty == false));
+            Visitor visitorToMove = _queue[placesToCarry[i + 1]];
 
-            leastEmptyPlaceIndex = lastUnemptyPlaceIndex + 1;
+            if (visitorToMove == null)
+            {
+                break;
+            }
+
+            _queue[placesToCarry[i]] = visitorToMove;
+            _queue[placesToCarry[i + 1]] = null;
+
+            visitorToMove.TakeNextPlace(placesToCarry[i].position);
         }
-
-        return leastEmptyPlaceIndex;
     }
 }

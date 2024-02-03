@@ -58,7 +58,7 @@ public class KeeperPlace : MonoBehaviour, IKeepable
     {
         if (_objectToKeep != null)
         {
-            Destroy(_objectToKeep.gameObject);
+            _objectToKeep.gameObject.SetActive(false);
             _objectToKeep = null;
             _isEmpty = true;
         }
