@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(MathMovement))]
+[RequireComponent(typeof(Tiring))]
 [RequireComponent(typeof(LeavingQueueAnimation))]
 public class Visitor : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Visitor : MonoBehaviour
 
     private Transform _transform;
     private MathMovement _movement;
+    private Tiring _tiring;
     private Coroutine _mover = null;
     private LeavingQueueAnimation _leavingQueueAnimation;
 
@@ -21,7 +23,18 @@ public class Visitor : MonoBehaviour
     {
         _transform = transform;
         _movement = GetComponent<MathMovement>();
+        _tiring = GetComponent<Tiring>();
         _leavingQueueAnimation = GetComponent<LeavingQueueAnimation>();
+    }
+
+    private void OnEnable()
+    {
+        _tiring.Tired += OnTired;
+    }
+
+    private void OnDisable()
+    {
+        _tiring.Tired -= OnTired;
     }
 
     public void Reset(Transform startPlace)
@@ -31,6 +44,7 @@ public class Visitor : MonoBehaviour
         _keeper.DropObject();
 
         gameObject.SetActive(true);
+        _tiring.StartTiring();
     }
 
     public void TakeNextPlace(Vector3 targetPlace)
@@ -46,6 +60,7 @@ public class Visitor : MonoBehaviour
     public void TakePotion(Transform potion)
     {
         _keeper.Take(potion);
+        _tiring.StopTiring();
 
         Left?.Invoke(this);
     }
@@ -53,6 +68,11 @@ public class Visitor : MonoBehaviour
     public void LeaveQueue(Vector3 exitPosition)
     {
         StartCoroutine(Leave(exitPosition));
+    }
+
+    private void OnTired()
+    {
+        Left?.Invoke(this);
     }
 
     private IEnumerator MoveToNextPlace(Vector3 targetPlace)

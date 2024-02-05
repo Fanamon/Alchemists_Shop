@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PotionCabinet : MonoBehaviour
 {
+    [SerializeField] private DiseaseType _diseaseType;
     [SerializeField] private ImmediateActivator _activator;
     [SerializeField] private KeeperPlace[] _keepers;
 
@@ -18,21 +19,27 @@ public class PotionCabinet : MonoBehaviour
 
     private void OnPlayerEntered(Player player)
     {
-        KeeperPlace[] playerKeepers = player.TryGetKeepersWithObjects();
+        KeeperPlace[] playerKeepers = player.TryGetKeepersWithObjects()
+            .Where(keeper => keeper.ShowObjectInKeep().GetComponent<Potion>().DiseaseType == _diseaseType).ToArray();
         KeeperPlace[] emptyKeepers = _keepers.Where(keeper => keeper.IsEmpty).ToArray();
+        KeeperPlace[] unemptyKeepers = _keepers.Where(keeper => keeper.IsEmpty == false).ToArray();
 
         playerKeepers = playerKeepers.Where(keeper => keeper.ShowObjectInKeep().
         TryGetComponent(out Potion potion)).ToArray();
 
-        if (playerKeepers.Length == 0 || emptyKeepers.Length == 0)
+        if (playerKeepers.Length != 0 && emptyKeepers.Length != 0)
         {
-            return;
-        }
+            int minLength = System.Math.Min(playerKeepers.Length, emptyKeepers.Length);
 
-        foreach (var keeper in emptyKeepers)
+            for (int i = 0; i < minLength; i++)
+            {
+                player.GiveAway(playerKeepers.First(keeperWithPotion => keeperWithPotion.IsEmpty == false),
+                    emptyKeepers[i]);
+            }
+        }
+        else if (unemptyKeepers.Length != 0)
         {
-            player.GiveAway(playerKeepers.First(keeperWithPotion => keeperWithPotion.IsEmpty == false), 
-                keeper);
+            player.TryTake(unemptyKeepers);
         }
     }
 }

@@ -249,6 +249,8 @@ GameObject:
   - component: {fileID: 648737124519535820}
   - component: {fileID: 3890730289112439597}
   - component: {fileID: 9115142852962908974}
+  - component: {fileID: 4892474532519806876}
+  - component: {fileID: 8439262711736126780}
   m_Layer: 6
   m_Name: InfluenzaVisitor
   m_TagString: Untagged
@@ -329,8 +331,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5447b9367ddb46841b76e8e0da8e2224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 5573009834531276646}
-  _model: {fileID: 3860560423906664449}
   _keeper: {fileID: 4564059624025049023}
 --- !u!114 &3890730289112439597
 MonoBehaviour:
@@ -361,3 +361,29 @@ MonoBehaviour:
   _type: 0
   _potionToCure: {fileID: 2204806068114357636, guid: 6cf8798841015c542bd0c769ef9f8730,
     type: 3}
+--- !u!114 &4892474532519806876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6785111805818502492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2598dfb35d379e14a9ef0adf4514974a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _minTiringTimeInMinutes: 0.7
+  _maxTiringTimeInMinutes: 1.4
+--- !u!114 &8439262711736126780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6785111805818502492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b3ac149ddfc89e43bc6f7c35dc4a4fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

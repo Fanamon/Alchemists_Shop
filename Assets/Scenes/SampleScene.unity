@@ -553,6 +553,10 @@ MonoBehaviour:
   _container: {fileID: 250900520}
   _potionPrefabs:
   - {fileID: 2204806068114357636, guid: 6cf8798841015c542bd0c769ef9f8730, type: 3}
+  - {fileID: 2204806068114357636, guid: 0d7578be4e6c0074b94692529a8992ec, type: 3}
+  - {fileID: 2204806068114357636, guid: 342292abe8e75234d80861ef119dd3be, type: 3}
+  - {fileID: 2204806068114357636, guid: 508858a8e977eab4481a549e3a9d4400, type: 3}
+  - {fileID: 2204806068114357636, guid: d0556a824543da049a87a3bffe303f1c, type: 3}
 --- !u!1 &287381959
 GameObject:
   m_ObjectHideFlags: 0
@@ -1959,7 +1963,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea9c14f71d9da345a297a72343a2626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pickingUpSpeed: 3
+  _pickingUpSpeed: 9
   _startingObjectToTake: {fileID: 0}
 --- !u!4 &1422694414
 Transform:
@@ -2092,6 +2096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54d519335ebf0a341bc2e58c436319f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _diseaseType: 0
   _activator: {fileID: 44676629}
   _keepers:
   - {fileID: 1422694413}
@@ -2366,7 +2371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea9c14f71d9da345a297a72343a2626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pickingUpSpeed: 3
+  _pickingUpSpeed: 9
   _startingObjectToTake: {fileID: 0}
 --- !u!4 &1815451169
 Transform:
