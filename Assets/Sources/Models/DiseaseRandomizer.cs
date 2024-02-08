@@ -8,6 +8,6 @@ public class DiseaseRandomizer
 
     public DiseaseType GetRandomDiseaseType()
     {
-        return DiseaseType.Influenza;//(DiseaseType)_random.Next((int)DiseaseType.Depression + 1);
+        return (DiseaseType)_random.Next((int)DiseaseType.Scabies + 1);
     }
 }

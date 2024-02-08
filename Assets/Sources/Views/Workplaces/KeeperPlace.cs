@@ -8,11 +8,9 @@ public class KeeperPlace : MonoBehaviour, IKeepable
     [SerializeField] private Transform _startingObjectToTake = null;
 
     private Transform _transform;
-    private Transform _objectToKeep;
+    protected Transform ObjectToKeep;
 
-    private bool _isEmpty;
-
-    public bool IsEmpty => _isEmpty;
+    public bool IsEmpty { get; protected set; }
 
     private void Awake()
     {
@@ -24,13 +22,13 @@ public class KeeperPlace : MonoBehaviour, IKeepable
         }
         else
         {
-            _isEmpty = true;
+            IsEmpty = true;
         }
     }
 
     public void Take(Transform objectToKeep)
     {
-        _isEmpty = false;
+        IsEmpty = false;
         objectToKeep.SetParent(_transform);
 
         StartCoroutine(PickUp(objectToKeep));
@@ -39,10 +37,10 @@ public class KeeperPlace : MonoBehaviour, IKeepable
     public Transform GiveAway()
     {
         ValidateObjectToKeep();
-        Transform objectToGiveAway = _objectToKeep;
+        Transform objectToGiveAway = ObjectToKeep;
 
-        _objectToKeep = null;
-        _isEmpty = true;
+        ObjectToKeep = null;
+        IsEmpty = true;
 
         return objectToGiveAway;
     }
@@ -51,22 +49,22 @@ public class KeeperPlace : MonoBehaviour, IKeepable
     {
         ValidateObjectToKeep();
 
-        return _objectToKeep.gameObject;
+        return ObjectToKeep.gameObject;
     }
 
-    public void DropObject()
+    public virtual void DropObject()
     {
-        if (_objectToKeep != null)
+        if (ObjectToKeep != null)
         {
-            _objectToKeep.gameObject.SetActive(false);
-            _objectToKeep = null;
-            _isEmpty = true;
+            ObjectToKeep.gameObject.SetActive(false);
+            ObjectToKeep = null;
+            IsEmpty = true;
         }
     }
 
     private void ValidateObjectToKeep()
     {
-        if (_objectToKeep == null)
+        if (ObjectToKeep == null)
         {
             throw new System.ArgumentNullException("Place doesn't have object to keep.");
         }
@@ -78,11 +76,12 @@ public class KeeperPlace : MonoBehaviour, IKeepable
         {
             objectToTake.position = Vector3.MoveTowards(objectToTake.position, _transform.position, 
                 _pickingUpSpeed * Time.deltaTime);
+            objectToTake.rotation = Quaternion.identity;
 
             yield return null;
         }
 
-        _objectToKeep = objectToTake;
+        ObjectToKeep = objectToTake;
     }
 }
 

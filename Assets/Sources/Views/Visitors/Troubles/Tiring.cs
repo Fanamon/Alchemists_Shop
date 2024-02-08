@@ -6,8 +6,8 @@ public class Tiring : MonoBehaviour
 {
     private const float MinutesToSecondsMultiplier = 60;
 
-    [SerializeField] private float _minTiringTimeInMinutes = 1.5f;
-    [SerializeField] private float _maxTiringTimeInMinutes = 2f;
+    [SerializeField] private float _minTiringTimeInMinutes = 0.7f;
+    [SerializeField] private float _maxTiringTimeInMinutes = 1.4f;
 
     private Coroutine _tiring = null;
 

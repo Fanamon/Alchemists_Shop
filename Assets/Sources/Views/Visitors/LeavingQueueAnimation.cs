@@ -39,11 +39,7 @@ public class LeavingQueueAnimation : MonoBehaviour
 
         _animator.Play(animatorStateName);
 
-        do
-        {
-            yield return null;
-        }
-        while (_animator.GetCurrentAnimatorClipInfo(0)[0].clip.name != Idle);
+        yield return new WaitForSeconds(_animator.GetCurrentAnimatorClipInfo(0)[0].clip.length);
 
         IsStarted = false;
     }

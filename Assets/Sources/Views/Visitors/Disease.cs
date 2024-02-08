@@ -3,7 +3,6 @@ using UnityEngine;
 public class Disease : MonoBehaviour
 {
     [SerializeField] private DiseaseType _type;
-    [SerializeField] private Potion _potionToCure;
 
     public DiseaseType Type => _type;
 }

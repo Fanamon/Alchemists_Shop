@@ -17,15 +17,18 @@ public class PotionCabinet : MonoBehaviour
         _activator.PlayerEntered -= OnPlayerEntered;
     }
 
+    private void Start()
+    {
+        TryChangeActivatorAvailability();
+    }
+
     private void OnPlayerEntered(Player player)
     {
         KeeperPlace[] playerKeepers = player.TryGetKeepersWithObjects()
-            .Where(keeper => keeper.ShowObjectInKeep().GetComponent<Potion>().DiseaseType == _diseaseType).ToArray();
+            .Where(keeper => keeper.ShowObjectInKeep().TryGetComponent(out Potion potion) && 
+            keeper.ShowObjectInKeep().GetComponent<Potion>().DiseaseType == _diseaseType).ToArray();
         KeeperPlace[] emptyKeepers = _keepers.Where(keeper => keeper.IsEmpty).ToArray();
         KeeperPlace[] unemptyKeepers = _keepers.Where(keeper => keeper.IsEmpty == false).ToArray();
-
-        playerKeepers = playerKeepers.Where(keeper => keeper.ShowObjectInKeep().
-        TryGetComponent(out Potion potion)).ToArray();
 
         if (playerKeepers.Length != 0 && emptyKeepers.Length != 0)
         {
@@ -40,6 +43,20 @@ public class PotionCabinet : MonoBehaviour
         else if (unemptyKeepers.Length != 0)
         {
             player.TryTake(unemptyKeepers);
+        }
+
+        TryChangeActivatorAvailability();
+    }
+
+    private void TryChangeActivatorAvailability()
+    {
+        if (_keepers.Where(keeper => keeper.IsEmpty).Count() == 0)
+        {
+            _activator.gameObject.SetActive(false);
+        }
+        else
+        {
+            _activator.gameObject.SetActive(true);
         }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine.Events;
 
 [RequireComponent(typeof(MathMovement))]
 [RequireComponent(typeof(Tiring))]
+[RequireComponent(typeof(PotionDrinker))]
 [RequireComponent(typeof(LeavingQueueAnimation))]
 public class Visitor : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class Visitor : MonoBehaviour
     private Transform _transform;
     private MathMovement _movement;
     private Tiring _tiring;
+    private PotionDrinker _drinker;
     private Coroutine _mover = null;
     private LeavingQueueAnimation _leavingQueueAnimation;
 
@@ -24,17 +26,22 @@ public class Visitor : MonoBehaviour
         _transform = transform;
         _movement = GetComponent<MathMovement>();
         _tiring = GetComponent<Tiring>();
+        _drinker = GetComponent<PotionDrinker>();
         _leavingQueueAnimation = GetComponent<LeavingQueueAnimation>();
     }
 
     private void OnEnable()
     {
         _tiring.Tired += OnTired;
+        _drinker.Cured += OnFailed;
+        _drinker.Failed += OnFailed;
     }
 
     private void OnDisable()
     {
         _tiring.Tired -= OnTired;
+        _drinker.Cured -= OnFailed;
+        _drinker.Failed -= OnFailed;
     }
 
     public void Reset(Transform startPlace)
@@ -61,8 +68,7 @@ public class Visitor : MonoBehaviour
     {
         _keeper.Take(potion);
         _tiring.StopTiring();
-
-        Left?.Invoke(this);
+        _drinker.Drink(potion.GetComponent<Potion>());
     }
 
     public void LeaveQueue(Vector3 exitPosition)
@@ -71,6 +77,11 @@ public class Visitor : MonoBehaviour
     }
 
     private void OnTired()
+    {
+        Left?.Invoke(this);
+    }
+
+    private void OnFailed()
     {
         Left?.Invoke(this);
     }

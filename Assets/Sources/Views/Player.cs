@@ -7,17 +7,16 @@ public class Player : MonoBehaviour
 
     public void TryTake(IKeepable[] keepersWithObject)
     {
-        if (keepersWithObject.Length == 0)
-        {
-            return;
-        }
+        KeeperPlace[] emptyHands = _keepers.Where(hand => hand.IsEmpty).ToArray();
 
-        foreach (var keeper in _keepers)
+        if (keepersWithObject.Length != 0 && emptyHands.Length != 0)
         {
-            if (keeper.IsEmpty)
+            int minLength = System.Math.Min(keepersWithObject.Length, emptyHands.Length);
+
+            for (int i = 0; i < minLength; i++)
             {
-                keeper.Take(keepersWithObject.First(keeperWithObject => keeperWithObject.IsEmpty == false).
-                    GiveAway());
+                emptyHands[i].Take(keepersWithObject.First(keeperWithObject => keeperWithObject.IsEmpty == false).
+                        GiveAway());
             }
         }
     }
