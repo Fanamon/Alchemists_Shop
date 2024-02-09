@@ -51,7 +51,7 @@ public class ReagentCreator : MonoBehaviour
 
     private IEnumerator MakeReagents()
     {
-        WaitForSecondsRealtime waitingTime = new WaitForSecondsRealtime(_makingReagentTime);
+        WaitForSeconds waitingTime = new WaitForSeconds(_makingReagentTime);
 
         yield return waitingTime;
 

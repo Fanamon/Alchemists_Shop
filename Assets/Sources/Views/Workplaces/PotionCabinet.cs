@@ -17,11 +17,6 @@ public class PotionCabinet : MonoBehaviour
         _activator.PlayerEntered -= OnPlayerEntered;
     }
 
-    private void Start()
-    {
-        TryChangeActivatorAvailability();
-    }
-
     private void OnPlayerEntered(Player player)
     {
         KeeperPlace[] playerKeepers = player.TryGetKeepersWithObjects()
@@ -43,20 +38,6 @@ public class PotionCabinet : MonoBehaviour
         else if (unemptyKeepers.Length != 0)
         {
             player.TryTake(unemptyKeepers);
-        }
-
-        TryChangeActivatorAvailability();
-    }
-
-    private void TryChangeActivatorAvailability()
-    {
-        if (_keepers.Where(keeper => keeper.IsEmpty).Count() == 0)
-        {
-            _activator.gameObject.SetActive(false);
-        }
-        else
-        {
-            _activator.gameObject.SetActive(true);
         }
     }
 }

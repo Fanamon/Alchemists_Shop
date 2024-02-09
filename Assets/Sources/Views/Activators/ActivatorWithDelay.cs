@@ -34,7 +34,7 @@ public class ActivatorWithDelay : Activator
     private IEnumerator ActivateWithDelay(Player player)
     {
         int counter = 0;
-        WaitForSecondsRealtime waitingTime = new WaitForSecondsRealtime(WaitingSeconds);
+        WaitForSeconds waitingTime = new WaitForSeconds(WaitingSeconds);
 
         do
         {

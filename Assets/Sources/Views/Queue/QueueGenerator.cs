@@ -30,7 +30,7 @@ public class QueueGenerator : MonoBehaviour
 
     private IEnumerator Generate()
     {
-        WaitForSecondsRealtime waitingTime = new WaitForSecondsRealtime(_generatingDelaySeconds);
+        WaitForSeconds waitingTime = new WaitForSeconds(_generatingDelaySeconds);
 
         while (isActiveAndEnabled)
         {

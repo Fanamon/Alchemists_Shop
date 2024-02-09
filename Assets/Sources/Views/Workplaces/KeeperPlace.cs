@@ -72,6 +72,8 @@ public class KeeperPlace : MonoBehaviour, IKeepable
 
     private IEnumerator PickUp(Transform objectToTake)
     {
+        ObjectToKeep = objectToTake;
+
         while (objectToTake.position != _transform.position)
         {
             objectToTake.position = Vector3.MoveTowards(objectToTake.position, _transform.position, 
@@ -80,8 +82,6 @@ public class KeeperPlace : MonoBehaviour, IKeepable
 
             yield return null;
         }
-
-        ObjectToKeep = objectToTake;
     }
 }
 

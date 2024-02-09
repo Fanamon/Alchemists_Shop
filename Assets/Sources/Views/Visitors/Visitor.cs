@@ -33,14 +33,14 @@ public class Visitor : MonoBehaviour
     private void OnEnable()
     {
         _tiring.Tired += OnTired;
-        _drinker.Cured += OnFailed;
+        _drinker.Cured += OnCured;
         _drinker.Failed += OnFailed;
     }
 
     private void OnDisable()
     {
         _tiring.Tired -= OnTired;
-        _drinker.Cured -= OnFailed;
+        _drinker.Cured -= OnCured;
         _drinker.Failed -= OnFailed;
     }
 
@@ -77,6 +77,11 @@ public class Visitor : MonoBehaviour
     }
 
     private void OnTired()
+    {
+        Left?.Invoke(this);
+    }
+
+    private void OnCured(PotionDrinker potionDrinker)
     {
         Left?.Invoke(this);
     }

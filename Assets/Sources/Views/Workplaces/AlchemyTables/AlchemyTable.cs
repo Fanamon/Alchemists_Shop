@@ -47,7 +47,7 @@ public class AlchemyTable : MonoBehaviour
 
         player.TryTake(unemptyKeepers);
 
-        if (unemptyKeepers.Length == 0)
+        if (_keepers.Where(keeper => keeper.IsEmpty == false).Count() == 0)
         {
             _activator.gameObject.SetActive(false);
         }
@@ -103,28 +103,33 @@ public class AlchemyTable : MonoBehaviour
         int minLength = System.Math.Min(placesWithReagents.Length, emptyPotionKeepers.Length);
         placesWithReagents.Take(minLength).ToList().ForEach(keeper => keeper.StartProcessing());
 
-        WaitForSecondsRealtime waitingTime = new WaitForSecondsRealtime(_makingPotionTime);
-        Potion potion;
+        WaitForSeconds waitingTime = new WaitForSeconds(_makingPotionTime);
 
         yield return waitingTime;
 
         for (int i = 0; i < minLength; i++)
         {
-            potion = _pool.TryGetDisabledPotion(_diseaseType);
-            potion.transform.position = emptyPotionKeepers[i].transform.position;
-            emptyPotionKeepers[i].Take(potion.transform);
-            placesWithReagents[i].DropObject();
-            potion.gameObject.SetActive(true);
+            CreatePotion(placesWithReagents[i], emptyPotionKeepers[i]);
+        }
+
+        if (_zoneActivator.gameObject.activeSelf == false)
+        {
+            _zoneActivator.gameObject.SetActive(true);
         }
 
         if (_activator.gameObject.activeSelf == false)
         {
             _activator.gameObject.SetActive(true);
         }
-        
-        if (_zoneActivator.gameObject.activeSelf == false)
-        {
-            _zoneActivator.gameObject.SetActive(true);
-        }
+    }
+
+    private void CreatePotion(ReagentPlace placeWithReagent, KeeperPlace emptyPotionKeeper)
+    {
+        Potion potion = _pool.TryGetDisabledPotion(_diseaseType);
+
+        potion.transform.position = emptyPotionKeeper.transform.position;
+        emptyPotionKeeper.Take(potion.transform);
+        placeWithReagent.DropObject();
+        potion.gameObject.SetActive(true);
     }
 }

@@ -6,7 +6,6 @@ public class LeavingQueueAnimation : MonoBehaviour
 {
     private const string LeavingLeft = "LeavingLeft";
     private const string LeavingRight = "LeavingRight";
-    private const string Idle = "Idle";
 
     private System.Random _random = new System.Random();
 

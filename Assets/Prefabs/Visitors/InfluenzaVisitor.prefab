@@ -492,6 +492,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _positiveSignal: {fileID: 4520141834496522233}
   _negativeSignal: {fileID: 632162187407353105}
+  _minRewardValue: 10
+  _maxRewardValue: 25
 --- !u!114 &3890730289112439597
 MonoBehaviour:
   m_ObjectHideFlags: 0

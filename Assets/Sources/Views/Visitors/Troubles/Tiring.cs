@@ -13,6 +13,9 @@ public class Tiring : MonoBehaviour
 
     public event UnityAction Tired;
 
+    public float TiringTime { get; private set; }
+    public float TiringCounter { get; private set; }
+
     public void StartTiring()
     {
         if (_tiring != null)
@@ -30,12 +33,34 @@ public class Tiring : MonoBehaviour
 
     private IEnumerator Tire()
     {
-        float tiringTime = Random.Range(_minTiringTimeInMinutes, _maxTiringTimeInMinutes) * 
+        TiringTime = Random.Range(_minTiringTimeInMinutes, _maxTiringTimeInMinutes) * 
             MinutesToSecondsMultiplier;
+        TiringCounter = 0;
 
-        yield return new WaitForSecondsRealtime(tiringTime);
+        while (TiringCounter < TiringTime)
+        {
+            yield return null;
+
+            TiringCounter += Time.deltaTime;
+        }
 
         Tired?.Invoke();
         _tiring = null;
+    }
+
+    private void OnValidate()
+    {
+        if (_maxTiringTimeInMinutes < _minTiringTimeInMinutes)
+        {
+            float tempValue = _maxTiringTimeInMinutes;
+            _maxTiringTimeInMinutes = _minTiringTimeInMinutes;
+            _minTiringTimeInMinutes = tempValue;
+        }
+
+        if (_maxTiringTimeInMinutes < 0 || _minTiringTimeInMinutes < 0)
+        {
+            _minTiringTimeInMinutes = Mathf.Max(0, _minTiringTimeInMinutes);
+            _maxTiringTimeInMinutes = Mathf.Max(0, _maxTiringTimeInMinutes);
+        }
     }
 }
