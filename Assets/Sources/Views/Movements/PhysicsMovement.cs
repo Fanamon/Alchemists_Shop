@@ -27,8 +27,6 @@ public class PhysicsMovement : MonoBehaviour
             return;
         }
 
-        float scaledMoveSpeed = _speed * Time.deltaTime;
-
         Vector3 moveDirection = new Vector3(direction.x, 0, direction.y);
         Vector3 rotateDirection = Vector3.ProjectOnPlane(moveDirection, Vector3.up).normalized;
 
@@ -38,7 +36,7 @@ public class PhysicsMovement : MonoBehaviour
         }
 
         _rotator = StartCoroutine(RotateTo(rotateDirection));
-        _rigidbody.velocity += moveDirection.normalized * scaledMoveSpeed;
+        _rigidbody.velocity = moveDirection.normalized * _speed;
     }
 
     private IEnumerator RotateTo(Vector3 direction)
