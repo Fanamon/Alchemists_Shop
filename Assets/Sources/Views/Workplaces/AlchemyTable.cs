@@ -2,9 +2,11 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
-public class AlchemyTable : MonoBehaviour
+public class AlchemyTable : Workplace
 {
-    [SerializeField] private float _makingPotionTime;
+    private const float MakingPotionTimeDecreaseByUpgradePercentage = 0.15f;
+
+    [SerializeField] private float _startingMakingPotionTime;
 
     [SerializeField] private DiseaseType _diseaseType;
 
@@ -13,6 +15,8 @@ public class AlchemyTable : MonoBehaviour
     [SerializeField] private PotionPool _pool;
     [SerializeField] private KeeperPlace[] _keepers;
     [SerializeField] private ReagentPlace[] _reagentKeepers;
+
+    private float _makingPotionTime;
 
     private void OnEnable()
     {
@@ -28,6 +32,8 @@ public class AlchemyTable : MonoBehaviour
 
     private void Start()
     {
+        _makingPotionTime = _startingMakingPotionTime;
+
         if (_keepers.Where(keeper => keeper.IsEmpty == false).Count() == 0)
         {
             _activator.gameObject.SetActive(false);
@@ -39,6 +45,17 @@ public class AlchemyTable : MonoBehaviour
 
         TryDisableZoneActivator();
         TryMakePotions();
+    }
+
+    public void Initialize(PotionPool pool, DiseaseType diseaseType)
+    {
+        _pool = pool;
+        _diseaseType = diseaseType;
+    }
+
+    public override void Upgrade()
+    {
+        _makingPotionTime *= (1 - MakingPotionTimeDecreaseByUpgradePercentage);
     }
 
     private void OnPlayerEntered(Player player)

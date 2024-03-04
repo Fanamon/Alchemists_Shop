@@ -18,17 +18,17 @@ public class Tiring : MonoBehaviour
 
     public void StartTiring()
     {
-        if (_tiring != null)
-        {
-            StopTiring();
-        }
+        StopTiring();
 
         _tiring = StartCoroutine(Tire());
     }
 
     public void StopTiring()
     {
-        StopCoroutine(_tiring);
+        if (_tiring != null)
+        {
+            StopCoroutine(_tiring);
+        }
     }
 
     private IEnumerator Tire()

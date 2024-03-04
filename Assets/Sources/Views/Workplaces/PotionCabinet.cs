@@ -1,11 +1,23 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PotionCabinet : MonoBehaviour
+public class PotionCabinet : Workplace
 {
+    private const int PlacesForUpgradeCount = 3;
+
     [SerializeField] private DiseaseType _diseaseType;
+    [SerializeField] private Transform _placesForUpgradesKeeper;
     [SerializeField] private ImmediateActivator _activator;
-    [SerializeField] private KeeperPlace[] _keepers;
+    [SerializeField] private List<KeeperPlace> _keepers;
+
+    private List<KeeperPlace> _additionalPlacesForUpgrades;
+
+    private void Awake()
+    {
+        _additionalPlacesForUpgrades = _placesForUpgradesKeeper.GetComponentsInChildren<KeeperPlace>(true).ToList();
+        _additionalPlacesForUpgrades.ForEach(place => place.gameObject.SetActive(false));
+    }
 
     private void OnEnable()
     {
@@ -15,6 +27,23 @@ public class PotionCabinet : MonoBehaviour
     private void OnDisable()
     {
         _activator.PlayerEntered -= OnPlayerEntered;
+    }
+
+    public void Initialize(DiseaseType diseaseType)
+    {
+        _diseaseType = diseaseType;
+    }
+
+    public override void Upgrade()
+    {
+        List<KeeperPlace> placesToAdd = _additionalPlacesForUpgrades.Take(PlacesForUpgradeCount).ToList();
+
+        placesToAdd.ForEach(place => place.gameObject.SetActive(true));
+        placesToAdd.ForEach(place =>
+        {
+            _additionalPlacesForUpgrades.Remove(place);
+            _keepers.Add(place);
+        });
     }
 
     private void OnPlayerEntered(Player player)

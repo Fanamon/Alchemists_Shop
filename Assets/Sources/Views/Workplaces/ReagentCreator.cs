@@ -2,13 +2,17 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
-public class ReagentCreator : MonoBehaviour
+public class ReagentCreator : Workplace
 {
-    [SerializeField] private float _makingReagentTime;
+    private const float MakingReagentTimeDecreaseByUpgradePercentage = 0.25f;
+
+    [SerializeField] private float _startingMakingReagentTime;
 
     [SerializeField] private ImmediateActivator _activator;
     [SerializeField] private ReagentPool _pool;
     [SerializeField] private KeeperPlace[] _keepers;
+
+    private float _makingReagentTime;
 
     private Coroutine _reagentMaker = null;
 
@@ -24,6 +28,8 @@ public class ReagentCreator : MonoBehaviour
 
     private void Start()
     {
+        _makingReagentTime = _startingMakingReagentTime;
+
         if (_keepers.Where(keeper => keeper.IsEmpty).Count() != 0)
         {
             _reagentMaker = StartCoroutine(MakeReagents());
@@ -32,6 +38,16 @@ public class ReagentCreator : MonoBehaviour
         {
             _activator.gameObject.SetActive(false);
         }
+    }
+
+    public void Initialize(ReagentPool pool)
+    {
+        _pool = pool;
+    }
+
+    public override void Upgrade()
+    {
+        _makingReagentTime *= (1 - MakingReagentTimeDecreaseByUpgradePercentage);
     }
 
     private void OnPlayerEntered(Player player)

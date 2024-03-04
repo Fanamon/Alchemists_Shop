@@ -13,7 +13,7 @@ public class KeyboardInput : MonoBehaviour
         _movement = GetComponent<PhysicsMovement>();
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         float horizontal = Input.GetAxis(Horizontal);
         float vertical = Input.GetAxis(Vertical);
