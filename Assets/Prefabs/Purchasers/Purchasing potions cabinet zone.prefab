@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4457528197321044337}
   - component: {fileID: 6041713676969221311}
   m_Layer: 0
-  m_Name: Upgrader activator
+  m_Name: Activator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2905054412455217987}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.019, z: -2.67}
+  m_LocalPosition: {x: 0, y: 0.019, z: 4.17}
   m_LocalScale: {x: 0.1, y: 1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -144,7 +144,7 @@ Transform:
   m_GameObject: {fileID: 8108737067655322142}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -22.4, y: 0, z: 5.26}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -169,7 +169,6 @@ MonoBehaviour:
   _placeToPurchasing: {fileID: 8491344473219305902}
   _potionCabinetPrefab: {fileID: 6748010374221061393, guid: a0bfd0388d894dc4cb488c719d1b45ad,
     type: 3}
-  _diseaseType: 0
 --- !u!1 &8200981638114150952
 GameObject:
   m_ObjectHideFlags: 0

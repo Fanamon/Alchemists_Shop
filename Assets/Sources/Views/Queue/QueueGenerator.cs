@@ -19,22 +19,6 @@ public class QueueGenerator : MonoBehaviour
 
     public bool IsGenerating { get; private set; }
 
-    private void OnEnable()
-    {
-        foreach (var alchemyTablePurchaser in _alchemyTablePurchasers)
-        {
-            alchemyTablePurchaser.Purchased += OnPurchased;
-        }
-    }
-
-    private void OnDisable()
-    {
-        foreach (var alchemyTablePurchaser in _alchemyTablePurchasers)
-        {
-            alchemyTablePurchaser.Purchased -= OnPurchased;
-        }
-    }
-
     public void StartGenerating()
     {
         IsGenerating = true;
@@ -47,9 +31,14 @@ public class QueueGenerator : MonoBehaviour
         StopCoroutine(_generator);
     }
 
-    private void OnPurchased(DiseaseType type)
+    public void AddNewDiseaseType(DiseaseType type)
     {
         _diseaseRandomizer.AddNewType(type);
+    }
+
+    public void ChangeVisitorsGenerationDelayInPercentage(float delayPercentage)
+    {
+        _generatingDelaySeconds *= delayPercentage;
     }
 
     private IEnumerator Generate()

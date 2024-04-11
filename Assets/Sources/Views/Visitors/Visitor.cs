@@ -73,7 +73,12 @@ public class Visitor : MonoBehaviour
 
     public void LeaveQueue(Vector3 exitPosition)
     {
-        StartCoroutine(Leave(exitPosition));
+        if (_mover != null)
+        {
+            StopCoroutine(_mover);
+        }
+
+        _mover = StartCoroutine(Leave(exitPosition));
     }
 
     private void OnTired()

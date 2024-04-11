@@ -7,7 +7,10 @@ public class DiseaseRandomizer
 
     private List<DiseaseType> _enabledDiseaseTipes = new List<DiseaseType>();
 
-    public DiseaseRandomizer() { }
+    public DiseaseRandomizer()
+    {
+        _enabledDiseaseTipes.Add(DiseaseType.Influenza);
+    }
 
     public void AddNewType(DiseaseType type)
     {

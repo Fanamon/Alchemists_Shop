@@ -47,10 +47,9 @@ public class AlchemyTable : Workplace
         TryMakePotions();
     }
 
-    public void Initialize(PotionPool pool, DiseaseType diseaseType)
+    public void Initialize(PotionPool pool)
     {
         _pool = pool;
-        _diseaseType = diseaseType;
     }
 
     public override void Upgrade()

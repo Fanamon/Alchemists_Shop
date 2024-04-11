@@ -8,6 +8,8 @@ public class VisitorQueue : MonoBehaviour
     [SerializeField] private Transform _exitPoint;
     [SerializeField] private QueueGenerator _generator;
 
+    private bool _isRotateQueue = false;
+
     private Dictionary<Transform, Visitor> _queue = new Dictionary<Transform, Visitor>();
 
     private void Awake()
@@ -35,9 +37,14 @@ public class VisitorQueue : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void StartRotateQueue()
     {
-        _generator.StartGenerating();
+        _isRotateQueue = true;
+    }
+
+    public void StopRotateQueue()
+    {
+        _isRotateQueue = false;
     }
 
     private void OnVisitorGenerated(Visitor visitor)
@@ -70,7 +77,7 @@ public class VisitorQueue : MonoBehaviour
     {
         int leftPlaceIndex = _queue.Keys.ToList().IndexOf(leftplace);
 
-        if (_generator.IsGenerating == false)
+        if (_generator.IsGenerating == false && _isRotateQueue)
         {
             _generator.StartGenerating();
         }
