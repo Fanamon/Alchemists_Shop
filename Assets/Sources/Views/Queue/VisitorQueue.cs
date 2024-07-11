@@ -49,7 +49,13 @@ public class VisitorQueue : MonoBehaviour
 
     private void OnVisitorGenerated(Visitor visitor)
     {
-        Transform emptyPlace = _queue.First(place => place.Value == null).Key;
+        Transform emptyPlace = _queue.FirstOrDefault(place => place.Value == null).Key;
+
+        if (emptyPlace == null)
+        {
+            return;
+        }
+
         int firstEmptyPlaceIndex = _queue.Keys.ToList().IndexOf(emptyPlace);
 
         _queue[emptyPlace] = visitor;

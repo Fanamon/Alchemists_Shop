@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,9 +7,6 @@ using UnityEngine.Events;
 public class PotionDrinker : MonoBehaviour
 {
     private const float GuarantedPaymentPart = 0.3f;
-
-    [SerializeField] private GameObject _positiveSignal;
-    [SerializeField] private GameObject _negativeSignal;
 
     [SerializeField] private int _minRewardValue = 10;
     [SerializeField] private int _maxRewardValue = 25;
@@ -24,8 +22,6 @@ public class PotionDrinker : MonoBehaviour
     {
         _disease = GetComponent<Disease>();
         _tiring = GetComponent<Tiring>();
-        _positiveSignal.SetActive(false);
-        _negativeSignal.SetActive(false);
     }
 
     private void OnEnable()
@@ -33,25 +29,9 @@ public class PotionDrinker : MonoBehaviour
         _rewardValue = Random.Range(_minRewardValue, _maxRewardValue + 1);
     }
 
-    private void OnDisable()
+    public void Drink(Potion potion, float drinkingTime)
     {
-        _positiveSignal.SetActive(false);
-        _negativeSignal.SetActive(false);
-    }
-
-    public void Drink(Potion potion)
-    {
-        if (potion.DiseaseType == _disease.Type)
-        {
-            _positiveSignal.SetActive(true);
-            GetCountedReward();
-            Cured?.Invoke(this);
-        }
-        else
-        {
-            _negativeSignal.SetActive(true);
-            Failed?.Invoke();
-        }
+        StartCoroutine(TakeIn(potion, drinkingTime));
     }
 
     public int GetCountedReward()
@@ -75,6 +55,23 @@ public class PotionDrinker : MonoBehaviour
         {
             _minRewardValue = Mathf.Max(0, _minRewardValue);
             _maxRewardValue = Mathf.Max(0, _maxRewardValue);
+        }
+    }
+
+    private IEnumerator TakeIn(Potion potion, float drinkingTime)
+    {
+        WaitForSeconds waitingTime = new WaitForSeconds(drinkingTime);
+
+        yield return waitingTime;
+
+        if (potion.DiseaseType == _disease.Type)
+        {
+            GetCountedReward();
+            Cured?.Invoke(this);
+        }
+        else
+        {
+            Failed?.Invoke();
         }
     }
 }

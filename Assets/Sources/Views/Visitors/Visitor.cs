@@ -2,10 +2,10 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(MathMovement))]
+[RequireComponent(typeof(NavMeshMovement))]
 [RequireComponent(typeof(Tiring))]
 [RequireComponent(typeof(PotionDrinker))]
-[RequireComponent(typeof(LeavingQueueAnimation))]
+[RequireComponent(typeof(VisitorModelsAnimationsView))]
 public class Visitor : MonoBehaviour
 {
     private const float CompatibilityError = 0.01f;
@@ -13,35 +13,33 @@ public class Visitor : MonoBehaviour
     [SerializeField] private KeeperPlace _keeper;
 
     private Transform _transform;
-    private MathMovement _movement;
+    private NavMeshMovement _movement;
     private Tiring _tiring;
     private PotionDrinker _drinker;
     private Coroutine _mover = null;
-    private LeavingQueueAnimation _leavingQueueAnimation;
+    private VisitorModelsAnimationsView _visitorModelsAnimationsView;
 
     public event UnityAction<Visitor> Left;
 
     private void Awake()
     {
         _transform = transform;
-        _movement = GetComponent<MathMovement>();
+        _movement = GetComponent<NavMeshMovement>();
         _tiring = GetComponent<Tiring>();
         _drinker = GetComponent<PotionDrinker>();
-        _leavingQueueAnimation = GetComponent<LeavingQueueAnimation>();
+        _visitorModelsAnimationsView = GetComponent<VisitorModelsAnimationsView>();
     }
 
     private void OnEnable()
     {
         _tiring.Tired += OnTired;
-        _drinker.Cured += OnCured;
-        _drinker.Failed += OnFailed;
+        _visitorModelsAnimationsView.DrinkingFinished += OnDrinkingFinished;
     }
 
     private void OnDisable()
     {
         _tiring.Tired -= OnTired;
-        _drinker.Cured -= OnCured;
-        _drinker.Failed -= OnFailed;
+        _visitorModelsAnimationsView.DrinkingFinished -= OnDrinkingFinished;
     }
 
     public void Reset(Transform startPlace)
@@ -68,7 +66,8 @@ public class Visitor : MonoBehaviour
     {
         _keeper.Take(potion);
         _tiring.StopTiring();
-        _drinker.Drink(potion.GetComponent<Potion>());
+        _visitorModelsAnimationsView.Drink();
+        _drinker.Drink(potion.GetComponent<Potion>(), _visitorModelsAnimationsView.DrinkingTime);
     }
 
     public void LeaveQueue(Vector3 exitPosition)
@@ -78,7 +77,7 @@ public class Visitor : MonoBehaviour
             StopCoroutine(_mover);
         }
 
-        _mover = StartCoroutine(Leave(exitPosition));
+        _mover = StartCoroutine(MoveToNextPlace(exitPosition));
     }
 
     private void OnTired()
@@ -86,25 +85,22 @@ public class Visitor : MonoBehaviour
         Left?.Invoke(this);
     }
 
-    private void OnCured(PotionDrinker potionDrinker)
-    {
-        Left?.Invoke(this);
-    }
-
-    private void OnFailed()
+    private void OnDrinkingFinished()
     {
         Left?.Invoke(this);
     }
 
     private IEnumerator MoveToNextPlace(Vector3 targetPlace)
     {
+        _visitorModelsAnimationsView.Walk();
+        _movement.MoveTo(targetPlace);
+
         while (CheckPositionsCompatibility(_transform.position, targetPlace) == false)
         {
-            _movement.MoveTo(targetPlace);
-
             yield return null;
         }
 
+        _visitorModelsAnimationsView.Idle();
         _mover = null;
     }
 
@@ -112,22 +108,5 @@ public class Visitor : MonoBehaviour
     {
         return Mathf.Abs(firstPosition.x - secondPosition.x) < CompatibilityError && 
             Mathf.Abs(firstPosition.z - secondPosition.z) < CompatibilityError;
-    }
-
-    private IEnumerator Leave(Vector3 exitPosition)
-    {
-        _leavingQueueAnimation.StartAnimation();
-
-        while (CheckPositionsCompatibility(_transform.position, exitPosition) == false)
-        {
-            if (_leavingQueueAnimation.IsStarted == false)
-            {
-                _movement.MoveTo(exitPosition);
-            }
-
-            yield return null;
-        }
-
-        gameObject.SetActive(false);
     }
 }

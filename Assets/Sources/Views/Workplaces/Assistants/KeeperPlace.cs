@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class KeeperPlace : MonoBehaviour, IKeepable
 {
@@ -9,6 +10,9 @@ public class KeeperPlace : MonoBehaviour, IKeepable
 
     private Transform _transform;
     protected Transform ObjectToKeep;
+
+    public event UnityAction Took;
+    public event UnityAction GaveAway;
 
     public bool IsEmpty { get; protected set; }
 
@@ -29,6 +33,7 @@ public class KeeperPlace : MonoBehaviour, IKeepable
     public void Take(Transform objectToKeep)
     {
         IsEmpty = false;
+        Took?.Invoke();
         objectToKeep.SetParent(_transform);
 
         StartCoroutine(PickUp(objectToKeep));
@@ -41,6 +46,7 @@ public class KeeperPlace : MonoBehaviour, IKeepable
 
         ObjectToKeep = null;
         IsEmpty = true;
+        GaveAway?.Invoke();
 
         return objectToGiveAway;
     }
@@ -74,11 +80,12 @@ public class KeeperPlace : MonoBehaviour, IKeepable
     {
         ObjectToKeep = objectToTake;
 
-        while (objectToTake.position != _transform.position)
+        while (objectToTake.localPosition != Vector3.zero ||
+            objectToTake.localRotation != Quaternion.identity)
         {
-            objectToTake.position = Vector3.MoveTowards(objectToTake.position, _transform.position, 
+            objectToTake.localPosition = Vector3.MoveTowards(objectToTake.localPosition, Vector3.zero, 
                 _pickingUpSpeed * Time.deltaTime);
-            objectToTake.rotation = Quaternion.identity;
+            objectToTake.localRotation = Quaternion.identity;
 
             yield return null;
         }

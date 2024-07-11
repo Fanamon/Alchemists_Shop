@@ -1,23 +1,30 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PhysicsMovement))]
+[RequireComponent(typeof(NavMeshMovement))]
 public class KeyboardInput : MonoBehaviour
 {
     private const string Horizontal = "Horizontal";
     private const string Vertical = "Vertical";
 
-    private PhysicsMovement _movement;
+    private Vector2 _destination;
+
+    private NavMeshMovement _movement;
 
     private void Awake()
     {
-        _movement = GetComponent<PhysicsMovement>();
+        _movement = GetComponent<NavMeshMovement>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         float horizontal = Input.GetAxis(Horizontal);
         float vertical = Input.GetAxis(Vertical);
 
-        _movement.MoveTo(Vector2.up * vertical + Vector2.right * horizontal);
+        _destination = Vector2.up * vertical + Vector2.right * horizontal;
+    }
+
+    private void LateUpdate()
+    {
+        _movement.MoveTo(_destination);
     }
 }

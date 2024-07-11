@@ -25,6 +25,12 @@ public class CashRegister : MonoBehaviour
     {
         _activator.Activated -= OnActivated;
         _visitorActivator.VisitorEntered -= OnVisitorEntered;
+
+        if (_visitor != null)
+        {
+            _visitor.Left -= OnVisitorLeft;
+            _visitor = null;
+        }
     }
 
     private void OnActivated(Player player)
@@ -55,5 +61,13 @@ public class CashRegister : MonoBehaviour
     {
         _activator.gameObject.SetActive(true);
         _visitor = visitor;
+        _visitor.Left += OnVisitorLeft;
+    }
+
+    private void OnVisitorLeft(Visitor visitor)
+    {
+        _activator.gameObject.SetActive(false);
+        _visitor.Left -= OnVisitorLeft;
+        _visitor = null;
     }
 }

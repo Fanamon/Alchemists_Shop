@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PhysicsMovement : MonoBehaviour
 {
-    private const float MinMoveSensitivity = 0.01f;
+    private const float MinMoveSensitivity = 0.1f;
 
     [SerializeField] private float _speed;
     [SerializeField] private float _rotationSpeed;
@@ -13,6 +14,9 @@ public class PhysicsMovement : MonoBehaviour
     private Rigidbody _rigidbody;
 
     private Coroutine _rotator = null;
+
+    public event UnityAction MovementStarted;
+    public event UnityAction MovementFinished;
 
     private void Awake()
     {
@@ -24,6 +28,7 @@ public class PhysicsMovement : MonoBehaviour
     {
         if (direction.sqrMagnitude < MinMoveSensitivity)
         {
+            MovementFinished?.Invoke();
             return;
         }
 
@@ -37,6 +42,7 @@ public class PhysicsMovement : MonoBehaviour
 
         _rotator = StartCoroutine(RotateTo(rotateDirection));
         _rigidbody.velocity = moveDirection.normalized * _speed;
+        MovementStarted?.Invoke();
     }
 
     private IEnumerator RotateTo(Vector3 direction)

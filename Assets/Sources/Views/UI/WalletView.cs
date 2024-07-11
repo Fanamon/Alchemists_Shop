@@ -49,13 +49,16 @@ public class WalletView : MonoBehaviour
 
     private IEnumerator ChangeMoneyView(int targetMoneyValue)
     {
+        WaitForFixedUpdate waitingTime = new WaitForFixedUpdate();
+
         while (_currentMoneyViewValue != targetMoneyValue)
         {
-            _currentMoneyViewValue = (int)Mathf.MoveTowards(_currentMoneyViewValue, targetMoneyValue, MoneyChangeValue);
+            _currentMoneyViewValue = (int)Mathf.MoveTowards(_currentMoneyViewValue, targetMoneyValue, 
+                MoneyChangeValue * Time.unscaledDeltaTime);
 
             _moneyText.text = _currentMoneyViewValue.ToString();
 
-            yield return null;
+            yield return waitingTime;
         }
 
         _moneyViewChanger = null;
